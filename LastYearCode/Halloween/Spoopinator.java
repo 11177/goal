@@ -26,39 +26,47 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode;
 
+package org.firstinspires.ftc.promoBot;
 
 import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Drive_Robot", group = "Pushbot")
+
+/**
+ * This file provides basic Telop driving for a Pushbot robot.
+ * The code is structured as an Iterative OpMode
+ * <p>
+ * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
+ * All device access is managed through the HardwarePushbot class.
+ * <p>
+ * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
+ * It raises and lowers the claw using the Gampad Y and A buttons respectively.
+ * It also opens and closes the claws slowly using the left and right Bumper buttons.
+ * <p>
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ */
+
+@TeleOp(name = "spoopinator", group = "Pushbot")
 //@Disabled
-public class Disc_Drive extends OpMode {
+public class Spoopinator extends OpMode {
 
     /* Declare OpMode members. */
-    HardwareCompBot robot = new HardwareCompBot(); // use the class created to define a Pushbot's hardware
-    private static ElapsedTime runtime = new ElapsedTime();
+    private HardwareSpoopyBot promorobot = new HardwareSpoopyBot(); // use the class created to define a Pushbot's hardware
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
 
-        robot.init(hardwareMap);
-        //robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //robot.track.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        promorobot.init(hardwareMap);
         //view.runOpMode();
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "OOOOOoooOOOoOoOoOoOOOOOoooooO");    //
     }
 
     /*
@@ -73,7 +81,6 @@ public class Disc_Drive extends OpMode {
      */
     @Override
     public void start() {
-        runtime.reset();
     }
 
     /*
@@ -84,45 +91,33 @@ public class Disc_Drive extends OpMode {
     public void loop() {
         double left;
         double right;
-        double armPower;
-        // Changes the led color for end game
-        if (runtime.seconds() >= 110) {
-            robot.light.setPosition(.2775);
-        } else if (runtime.seconds() >= 85) {
-            robot.light.setPosition(.3375);
-        } else robot.light.setPosition(.6545);
-        //  this will cut the power to the wheel by 50 and 75 percent if needed for control
-        if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-            if (gamepad1.right_trigger > 0 && gamepad1.left_trigger > 0) {
-                left = -gamepad1.left_stick_y / 4;
-                right = -gamepad1.right_stick_y / 4;
-            } else {
-                left = -gamepad1.left_stick_y / 2;
-                right = -gamepad1.right_stick_y / 2;
-            }
-        } else {
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
-        }
+        public class color;
+        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+        left = -gamepad1.left_stick_y;
+        right = -gamepad1.right_stick_y;
 
-        //  controls the arm.  gives constant power to hold arm in air.  Cuts down power percent to prevent damage
+        if (gamepad1.X) {color=color+1 }
+        if color=1 {  robot.light.setPosition(.5275);
+        } else if color=2 {
+            robot.light.setPosition(.5825);
+        } else if color=3 {  robot.light.setPosition(.4475);
+        } else { color=1}
 
-        //  THis is for side ways movement changes the power to the wheels.  Power level is still the same as above
         if (gamepad1.left_bumper) {
-            robot.DriveLeft1.setPower(-left);
-            robot.DriveRight1.setPower(right);
-            robot.DriveLeft2.setPower(left);
-            robot.DriveRight2.setPower(-right);
+            spoopinator.left1.setPower(-left);
+            spoopinator.right1.setPower(right);
+            spoopinator.left2.setPower(left);
+            spoopinator.right2.setPower(-right);
         } else if (gamepad1.right_bumper) {
-            robot.DriveLeft1.setPower(left);
-            robot.DriveRight1.setPower(-right);
-            robot.DriveLeft2.setPower(-left);
-            robot.DriveRight2.setPower(right);
+            spoopinator.left1.setPower(left);
+            spoopinator.right1.setPower(-right);
+            spoopinator.left2.setPower(-left);
+            spoopinator.right2.setPower(right);
         } else {
-            robot.DriveLeft1.setPower(left);
-            robot.DriveRight1.setPower(right);
-            robot.DriveLeft2.setPower(left);
-            robot.DriveRight2.setPower(right);
+            spoopinator.left1.setPower(left);
+            spoopinator.right1.setPower(right);
+            spoopinator.left2.setPower(left);
+            spoopinator.right2.setPower(right);
         }
         telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);

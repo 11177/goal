@@ -35,11 +35,20 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class HardwareCompBot {
 
     /* Public OpMode members. */
-    DcMotor left1 = null;
-    DcMotor right1 = null;
-    DcMotor left2 = null;
-    DcMotor right2 = null;
+    DcMotor DriveLeft1 = null;
+    DcMotor DriveRight1 = null;
+    DcMotor DriveLeft2 = null;
+    DcMotor DriveRight2 = null;
+    DcMotor LaunchL = null;
+    DcMotor LaunchR = null;
+    DcMotor SpinIn = null;
+    DcMotor Ramp = null;
+    Servo DrawBridge = null;
     Servo light = null;
+    Servo Stopper = null;
+    Servo Arm = null;
+    Servo Claw = null;
+
 
     /* Constructor */
     HardwareCompBot() {
@@ -53,32 +62,49 @@ public class HardwareCompBot {
         /* local OpMode members. */
 
         // Define and Initialize Motors
-        left1 = ahwMap.get(DcMotor.class, "left1");
-        right1 = ahwMap.get(DcMotor.class, "right1");
-        left1.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        right1.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        left2 = ahwMap.get(DcMotor.class, "left2");
-        right2 = ahwMap.get(DcMotor.class, "right2");
-        left2.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        right2.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        DriveLeft1 = ahwMap.get(DcMotor.class, "left1");
+        DriveRight1 = ahwMap.get(DcMotor.class, "right1");
+        DriveLeft1.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        DriveRight1.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        DriveLeft2 = ahwMap.get(DcMotor.class, "left2");
+        DriveRight2 = ahwMap.get(DcMotor.class, "right2");
+        DriveLeft2.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        DriveRight2.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
-        left1.setPower(0);
-        right1.setPower(0);
-        left2.setPower(0);
-        right2.setPower(0);
+        DriveLeft1.setPower(0);
+        DriveRight1.setPower(0);
+        DriveLeft2.setPower(0);
+        DriveRight2.setPower(0);
+        LaunchL.setPower(0);
+        LaunchR.setPower(0);
+        SpinIn.setPower(0);
+        Ramp.setPower(0);
+
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        left1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        right1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        DriveLeft1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        DriveRight1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        DriveLeft2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        DriveRight2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LaunchL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LaunchR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SpinIn.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Ramp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
 
         light = ahwMap.get(Servo.class, "light");
         light.setPosition(.6395);
+        DrawBridge = ahwMap.get(Servo.class, "DrawBridge");
+        DrawBridge.setPosition(0);
+        Stopper = ahwMap.get(Servo.class, "Stopper");
+        Stopper.setPosition(0);
+        Arm = ahwMap.get(Servo.class, "Arm");
+        Arm.setPosition(0);
+        Claw = ahwMap.get(Servo.class, "Claw");
+        Claw.setPosition(0);
     }
 }
 
