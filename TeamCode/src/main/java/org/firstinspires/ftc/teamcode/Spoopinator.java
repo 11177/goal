@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.promoBot;
+package org.firstinspires.ftc.teamcode;
 
 import android.annotation.SuppressLint;
 
@@ -55,7 +55,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class Spoopinator extends OpMode {
 
     /* Declare OpMode members. */
-    private HardwareSpoopyBot spoopyBot = new HardwareSpoopyBot(); // use the class created to define a Pushbot's hardware
+    private HardwareSpoopyBot spoopinator = new HardwareSpoopyBot(); // use the class created to define a Pushbot's hardware
 
     @Override
     public void init() {
@@ -63,7 +63,7 @@ public class Spoopinator extends OpMode {
          * The init() method of the hardware class does all the work here
          */
 
-        promorobot.init(hardwareMap);
+        spoopinator.init(hardwareMap);
         //view.runOpMode();
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "OOOOOoooOOOoOoOoOoOOOOOoooooO");    //
@@ -91,17 +91,15 @@ public class Spoopinator extends OpMode {
     public void loop() {
         double left;
         double right;
-        public class color;
+        double color=0;
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
-        if (gamepad1.X) {color=color+1 }
-        if color=1 {  robot.light.setPosition(.5275);
-        } else if color=2 {
-            robot.light.setPosition(.5825);
-        } else if color=3 {  robot.light.setPosition(.4475);
-        } else { color=1}
+        if (gamepad1.x) {spoopinator.light.setPosition(.5275);}
+        if (gamepad1.y) {spoopinator.light.setPosition(.5825);}
+        if (gamepad1.a) {spoopinator.light.setPosition(.4675);}
+        if (gamepad1.b) {spoopinator.light.setPosition(.6175);}
 
         if (gamepad1.left_bumper) {
             spoopinator.left1.setPower(-left);

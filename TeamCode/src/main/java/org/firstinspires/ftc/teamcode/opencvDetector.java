@@ -32,8 +32,8 @@ import java.util.List;
  * monitor: 640 x 480
  * YES
  */
-@Autonomous(name = "opencvSkystoneDetector", group = "Sky autonomous")
-//@Disabled//comment out this line before using
+@Autonomous(name = "opencvdiscDetector", group = "Sky autonomous")
+//@Disabled
 public class opencvDetector extends LinearOpMode {
     //-1 for debug, but we can keep it like this because if it works, it should change to either 0 or 255
     private static int valTall = -1;
