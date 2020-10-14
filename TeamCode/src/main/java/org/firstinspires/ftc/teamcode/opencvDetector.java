@@ -36,9 +36,7 @@ import java.util.List;
 //@Disabled
 public class opencvDetector extends LinearOpMode {
     //-1 for debug, but we can keep it like this because if it works, it should change to either 0 or 255
-    private static int valTall = -1;
-    private static int valMid = -1;
-    private static int valNone = -1;
+
     private static float rectHeight = .6f / 8f;
     private static float rectWidth = 1.5f / 8f;
     private static float offsetX = 0f / 8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
@@ -51,7 +49,9 @@ public class opencvDetector extends LinearOpMode {
     private static float[] point6 = {4f / 8f + offsetX, 3.1f / 8f + offsetY};
     private static float[] point7 = {4f / 8f + offsetX, 3.2f / 8f + offsetY};
     private static float[] point8 = {4f / 8f + offsetX, 3.3f / 8f + offsetY};
+    private static int[] vals ={-1,-1,-1,-1,-1,-1,-1,-1};
     private final int rows = 640;
+    private static int totals = 0;
     //moves all rectangles right or left by amount. units are in ratio to monitor
     private final int cols = 480;
     OpenCvCamera phoneCam;
@@ -75,12 +75,21 @@ public class opencvDetector extends LinearOpMode {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            telemetry.addData("Values", valTall + "   " + valMid + "   " + valNone);
+            for (int i = 0; i<= 7;i++){
+                telemetry.addData("Values", vals[i] );
+            }
+            for (int i = 0; i<= 7;i++){
+              totals=totals + vals[i];
+            }
+            totals=totals/255;
+            telemetry.addData("total", totals);
+
             telemetry.addData("Height", rows);
             telemetry.addData("Width", cols);
 
             telemetry.update();
             sleep(100);
+            totals=0;
         }
     }
 
@@ -118,7 +127,7 @@ public class opencvDetector extends LinearOpMode {
             Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
 
             //b&w
-            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY_INV);
+            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 75, 255, Imgproc.THRESH_BINARY_INV);
 
             //outline/contour
             Imgproc.findContours(thresholdMat, contoursList, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -126,21 +135,21 @@ public class opencvDetector extends LinearOpMode {
 
             //get values from frame
             double[] pix1 = thresholdMat.get((int) (input.rows() * point1[1]), (int) (input.cols() * point1[0]));//gets value at circle
-            valMid = (int) pix1[0];
+            vals[0] = (int) pix1[0];
             double[] pix2 = thresholdMat.get((int) (input.rows() * point2[1]), (int) (input.cols() * point2[0]));//gets value at circle
-            valTall = (int) pix2[0];
+            vals[1] = (int) pix2[0];
             double[] pix3 = thresholdMat.get((int) (input.rows() * point3[1]), (int) (input.cols() * point3[0]));//gets value at circle
-            valTall = (int) pix3[0];
+            vals[2] = (int) pix3[0];
             double[] pix4 = thresholdMat.get((int) (input.rows() * point4[1]), (int) (input.cols() * point4[0]));//gets value at circle
-            valTall = (int) pix4[0];
+            vals[3] = (int) pix4[0];
             double[] pix5 = thresholdMat.get((int) (input.rows() * point5[1]), (int) (input.cols() * point5[0]));//gets value at circle
-            valTall = (int) pix5[0];
+            vals[4] = (int) pix5[0];
             double[] pix6 = thresholdMat.get((int) (input.rows() * point6[1]), (int) (input.cols() * point6[0]));//gets value at circle
-            valTall = (int) pix6[0];
+            vals[5] = (int) pix6[0];
             double[] pix7 = thresholdMat.get((int) (input.rows() * point7[1]), (int) (input.cols() * point7[0]));//gets value at circle
-            valTall = (int) pix7[0];
+            vals[6] = (int) pix7[0];
             double[] pix8 = thresholdMat.get((int) (input.rows() * point8[1]), (int) (input.cols() * point8[0]));//gets value at circle
-            valTall = (int) pix8[0];
+            vals[7] = (int) pix8[0];
             //create three points
             Point Point1 = new Point((int) (input.cols() * point1[0]), (int) (input.rows() * point1[1]));
             Point Point2 = new Point((int) (input.cols() * point2[0]), (int) (input.rows() * point2[1]));
