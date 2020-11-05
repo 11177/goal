@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.opencv.core.Core;
@@ -49,7 +51,7 @@ public class opencvDetector extends LinearOpMode {
     private static float[] point6 = {4f / 8f + offsetX, 3.1f / 8f + offsetY};
     private static float[] point7 = {4f / 8f + offsetX, 3.2f / 8f + offsetY};
     private static float[] point8 = {4f / 8f + offsetX, 3.3f / 8f + offsetY};
-    private static int[] vals ={-1,-1,-1,-1,-1,-1,-1,-1};
+    private static int[] vals = {-1, -1, -1, -1, -1, -1, -1, -1};
     private final int rows = 640;
     private static int totals = 0;
     //moves all rectangles right or left by amount. units are in ratio to monitor
@@ -75,13 +77,13 @@ public class opencvDetector extends LinearOpMode {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-            for (int i = 0; i<= 7;i++){
-                telemetry.addData("Values", vals[i] );
+            for (int i = 0; i <= 7; i++) {
+                telemetry.addData("Values", vals[i]);
             }
-            for (int i = 0; i<= 7;i++){
-              totals=totals + vals[i];
+            for (int i = 0; i <= 7; i++) {
+                totals = totals + vals[i];
             }
-            totals=totals/255;
+            totals = totals / 255;
             telemetry.addData("total", totals);
 
             telemetry.addData("Height", rows);
@@ -89,7 +91,7 @@ public class opencvDetector extends LinearOpMode {
 
             telemetry.update();
             sleep(100);
-            totals=0;
+            totals = 0;
         }
     }
 
@@ -179,7 +181,9 @@ public class opencvDetector extends LinearOpMode {
                     return all;
                 }
 
-                case RAW_IMAGE: {return input;}
+                case RAW_IMAGE: {
+                    return input;
+                }
 
                 default: {
                     return input;
@@ -192,6 +196,5 @@ public class opencvDetector extends LinearOpMode {
             THRESHOLD,//b&w
             RAW_IMAGE,//displays raw view
         }
-
     }
 }

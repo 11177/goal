@@ -39,16 +39,18 @@ public class HardwareCompBot {
     DcMotor DriveRight1 = null;
     DcMotor DriveLeft2 = null;
     DcMotor DriveRight2 = null;
+    Servo light = null;
+    /*
     DcMotor LaunchL = null;
+
     DcMotor LaunchR = null;
     DcMotor SpinIn = null;
     DcMotor Ramp = null;
     Servo DrawBridge = null;
-    Servo light = null;
     Servo Stopper = null;
     Servo Arm = null;
     Servo Claw = null;
-
+*/
 
     /* Constructor */
     HardwareCompBot() {
@@ -76,11 +78,12 @@ public class HardwareCompBot {
         DriveRight1.setPower(0);
         DriveLeft2.setPower(0);
         DriveRight2.setPower(0);
+  /*
         LaunchL.setPower(0);
         LaunchR.setPower(0);
         SpinIn.setPower(0);
         Ramp.setPower(0);
-
+*/
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -88,15 +91,15 @@ public class HardwareCompBot {
         DriveRight1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         DriveLeft2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         DriveRight2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        /*
         LaunchL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         LaunchR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SpinIn.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Ramp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+*/
         // Define and initialize ALL installed servos.
+/*
 
-        light = ahwMap.get(Servo.class, "light");
-        light.setPosition(.6395);
         DrawBridge = ahwMap.get(Servo.class, "DrawBridge");
         DrawBridge.setPosition(0);
         Stopper = ahwMap.get(Servo.class, "Stopper");
@@ -105,6 +108,9 @@ public class HardwareCompBot {
         Arm.setPosition(0);
         Claw = ahwMap.get(Servo.class, "Claw");
         Claw.setPosition(0);
+        */
+        light = ahwMap.get(Servo.class, "light");
+        light.setPosition(.6975);
     }
 }
 

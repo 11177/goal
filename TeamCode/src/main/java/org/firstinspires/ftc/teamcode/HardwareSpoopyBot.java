@@ -93,7 +93,7 @@ public class HardwareSpoopyBot {
         right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         light = ahwMap.get(Servo.class, "light");
-        light.setPosition(.6395);
+        light.setPosition(.7625);
     }
 }
 

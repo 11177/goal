@@ -86,11 +86,12 @@ public class Disc_Drive extends OpMode {
         double right;
         double armPower;
         // Changes the led color for end game
-        if (runtime.seconds() >= 110) {
+     /*   if (runtime.seconds() >= 110) {
             robot.light.setPosition(.2775);
         } else if (runtime.seconds() >= 85) {
             robot.light.setPosition(.3375);
         } else robot.light.setPosition(.6545);
+       */
         //  this will cut the power to the wheel by 50 and 75 percent if needed for control
         if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
             if (gamepad1.right_trigger > 0 && gamepad1.left_trigger > 0) {
