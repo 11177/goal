@@ -55,6 +55,9 @@ public class AutoDraft extends LinearOpMode {
     private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
     private static final double P_DRIVE_COEFF = 0.05;
+    private static int DistanceStart = 0;
+    private static int TurnStart = 0;
+    private static int backstart =0;
 
     HardwareCompBot robot = new HardwareCompBot();   // Use a Pushbot's hardware
 
@@ -73,10 +76,8 @@ public class AutoDraft extends LinearOpMode {
         phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.SIDEWAYS_RIGHT);//display on RC
         //width, height
         //width = height in this case, because camera is in portrait mode.
-
-        waitForStart();
         runtime.reset();
-        while (opModeIsActive()) {
+        while (!isStarted()) {
             for (int i = 0; i <= 7; i++) {
                 telemetry.addData("Values", vals[i]);
             }
@@ -91,12 +92,35 @@ public class AutoDraft extends LinearOpMode {
 
             telemetry.update();
             sleep(100);
+
+            if (totals >= 4) {
+                TurnStart = -90;
+                DistanceStart = 121;
+                backstart =48;
+            } else if (totals <= 1) {
+                TurnStart = -90;
+                DistanceStart = 74;
+                backstart = 0;
+            } else {
+                TurnStart = 90;
+                DistanceStart = 97;
+                backstart = 24;
+            }
             totals = 0;
+        }
+        while (opModeIsActive()) {
+        gyroDrive(DRIVE_SPEED, DistanceStart,0, 30);
+        gyroTurn(TurnStart, TURN_SPEED);
+        gyroDrive(DRIVE_SPEED, 6, TurnStart, 30);
+        gyroDrive(DRIVE_SPEED, -6, TurnStart, 30);
+        gyroTurn(TURN_SPEED, -TurnStart);
+        gyroDrive(DRIVE_SPEED, backstart,0, 30);
+        gyroHold(DRIVE_SPEED, 0, 30);
         }
     }
 
     //detection pipeline
-    static class StageSwitchingPipeline extends OpenCvPipeline {
+    class StageSwitchingPipeline extends OpenCvPipeline {
         Mat yCbCrChan2Mat = new Mat();
         Mat thresholdMat = new Mat();
         Mat all = new Mat();
@@ -188,14 +212,15 @@ public class AutoDraft extends LinearOpMode {
                 default: {
                     return input;
                 }
+
             }
         }
     }
 
-    private void gyroDrive (double driveSpeed,
-                            double distance,
-                            double angle,
-                            double timed){
+    private void gyroDrive(double driveSpeed,
+                           double distance,
+                           double angle,
+                           double timed) {
 
         int newLeftTarget1;
         int newRightTarget1;
@@ -213,18 +238,53 @@ public class AutoDraft extends LinearOpMode {
 
         // Ensure that the opmode is still active
 
+    }public void gyroTurn(double speed, double angle) {
+
+        //ElapsedTime holdTimer = new ElapsedTime();
+
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive()) {
+            // Update telemetry & Allow time for other processes to run.
+            telemetry.update();
+        }
     }
-    private void onHeading (double speed, double angle, double PCoeff) {
+
+    /*
+     * Method to obtain & hold a heading for a finite amount of time
+     * Move will stop once the requested time has elapsed
+     *
+     * @param speed    Desired speed of turn.
+     * @param angle    Absolute Angle (in Degrees) relative to last gyro reset.
+     *                 0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                 If a relative angle is required, add/subtract from current heading.
+     * @param holdTime Length of time (in seconds) to hold the specified heading.
+     */
+    public void gyroHold(double speed, double angle, double holdTime) {
+
+        ElapsedTime holdTimer = new ElapsedTime();
+
+        // keep looping while we have time remaining.
+        holdTimer.reset();
+        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
+            // Update telemetry & Allow time for other processes to run.
+            onHeading(speed, angle, P_TURN_COEFF);
+            //telemetry.update();
+        }
+
+        // Stop all motion;
+        robot.DriveLeft1.setPower(0);
+        robot.DriveRight1.setPower(0);
+        robot.DriveLeft2.setPower(0);
+        robot.DriveRight2.setPower(0);
+    }
+
+    private void onHeading(double speed, double angle, double PCoeff) {
         double error;
         double steer;
         boolean onTarget = false;
         double leftSpeed;
         double rightSpeed;
 
-    }enum Stage {//color difference. greyscale
-            RAW_IMAGE, //displays raw view
-            THRESHOLD, //b&w
-            detection //includes outlines
-            ,//displays raw view
-        }
     }
+
+}

@@ -40,6 +40,9 @@ public class HardwareCompBot {
     DcMotor DriveLeft2 = null;
     DcMotor DriveRight2 = null;
     Servo light = null;
+    DcMotor arm = null;
+    Servo claw = null;
+
     /*
     DcMotor LaunchL = null;
 
@@ -48,8 +51,6 @@ public class HardwareCompBot {
     DcMotor Ramp = null;
     Servo DrawBridge = null;
     Servo Stopper = null;
-    Servo Arm = null;
-    Servo Claw = null;
 */
 
     /* Constructor */
@@ -64,12 +65,12 @@ public class HardwareCompBot {
         /* local OpMode members. */
 
         // Define and Initialize Motors
-        DriveLeft1 = ahwMap.get(DcMotor.class, "left1");
-        DriveRight1 = ahwMap.get(DcMotor.class, "right1");
+        DriveLeft1 = ahwMap.get(DcMotor.class, "DriveLeft1");
+        DriveRight1 = ahwMap.get(DcMotor.class, "DriveRight1");
         DriveLeft1.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         DriveRight1.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        DriveLeft2 = ahwMap.get(DcMotor.class, "left2");
-        DriveRight2 = ahwMap.get(DcMotor.class, "right2");
+        DriveLeft2 = ahwMap.get(DcMotor.class, "DriveLeft2");
+        DriveRight2 = ahwMap.get(DcMotor.class, "DriveRight2");
         DriveLeft2.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         DriveRight2.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -78,6 +79,7 @@ public class HardwareCompBot {
         DriveRight1.setPower(0);
         DriveLeft2.setPower(0);
         DriveRight2.setPower(0);
+        arm.setPower(0);
   /*
         LaunchL.setPower(0);
         LaunchR.setPower(0);
@@ -91,6 +93,7 @@ public class HardwareCompBot {
         DriveRight1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         DriveLeft2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         DriveRight2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         /*
         LaunchL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         LaunchR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -98,19 +101,25 @@ public class HardwareCompBot {
         Ramp.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 */
         // Define and initialize ALL installed servos.
-/*
 
-        DrawBridge = ahwMap.get(Servo.class, "DrawBridge");
+
+     /*   DrawBridge = ahwMap.get(Servo.class, "DrawBridge");
         DrawBridge.setPosition(0);
         Stopper = ahwMap.get(Servo.class, "Stopper");
         Stopper.setPosition(0);
-        Arm = ahwMap.get(Servo.class, "Arm");
-        Arm.setPosition(0);
-        Claw = ahwMap.get(Servo.class, "Claw");
-        Claw.setPosition(0);
+
+      */
+       /* arm = ahwMap.get(Servo.class, "arm");
+        arm.setPosition(.1);
+
+
         */
+        claw = ahwMap.get(Servo.class, "claw");
+        claw.setPosition(0);
+
         light = ahwMap.get(Servo.class, "light");
         light.setPosition(.6975);
+
     }
 }
 

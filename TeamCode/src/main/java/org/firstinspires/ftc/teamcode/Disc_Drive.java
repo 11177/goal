@@ -84,7 +84,6 @@ public class Disc_Drive extends OpMode {
     public void loop() {
         double left;
         double right;
-        double armPower;
         // Changes the led color for end game
      /*   if (runtime.seconds() >= 110) {
             robot.light.setPosition(.2775);
@@ -92,6 +91,11 @@ public class Disc_Drive extends OpMode {
             robot.light.setPosition(.3375);
         } else robot.light.setPosition(.6545);
        */
+        if (gamepad2.left_bumper) {
+            robot.claw.setPosition(1);
+        } else if (gamepad2.right_bumper) {
+            robot.claw.setPosition(0);
+        }
         //  this will cut the power to the wheel by 50 and 75 percent if needed for control
         if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
             if (gamepad1.right_trigger > 0 && gamepad1.left_trigger > 0) {
@@ -107,8 +111,17 @@ public class Disc_Drive extends OpMode {
         }
 
         //  controls the arm.  gives constant power to hold arm in air.  Cuts down power percent to prevent damage
+       /* if (gamepad2.dpad_up){
+            robot.arm.setPosition(1);
+        } else if (gamepad2.dpad_down){ robot.arm.setPosition(.1);
+        }else robot.arm.setPosition(.5);
 
         //  THis is for side ways movement changes the power to the wheels.  Power level is still the same as above
+        */
+        if (gamepad2.left_stick_y>0){
+            robot.arm.setPower(.8);
+        } else if (gamepad2.left_stick_y<0){ robot.arm.setPower(-.8);
+        }else robot.arm.setPower(.2);
         if (gamepad1.left_bumper) {
             robot.DriveLeft1.setPower(-left);
             robot.DriveRight1.setPower(right);
