@@ -65,6 +65,7 @@ public class HardwareCompBot {
         /* local OpMode members. */
 
         // Define and Initialize Motors
+        arm =ahwMap.get(DcMotor.class, "arm");
         DriveLeft1 = ahwMap.get(DcMotor.class, "DriveLeft1");
         DriveRight1 = ahwMap.get(DcMotor.class, "DriveRight1");
         DriveLeft1.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -109,16 +110,12 @@ public class HardwareCompBot {
         Stopper.setPosition(0);
 
       */
-       /* arm = ahwMap.get(Servo.class, "arm");
-        arm.setPosition(.1);
 
-
-        */
         claw = ahwMap.get(Servo.class, "claw");
         claw.setPosition(0);
 
-        light = ahwMap.get(Servo.class, "light");
-        light.setPosition(.6975);
+       // light = ahwMap.get(Servo.class, "light");
+      //  light.setPosition(.6975);
 
     }
 }

@@ -49,12 +49,15 @@ public class Disc_Drive extends OpMode {
      */
     @Override
     public void init() {
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
 
         robot.init(hardwareMap);
-        //robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //robot.track.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //view.runOpMode();
         // Send telemetry message to signify robot waiting;
@@ -84,6 +87,9 @@ public class Disc_Drive extends OpMode {
     public void loop() {
         double left;
         double right;
+        double arm = 0;
+        double armpower;
+        double current;
         // Changes the led color for end game
      /*   if (runtime.seconds() >= 110) {
             robot.light.setPosition(.2775);
@@ -99,15 +105,15 @@ public class Disc_Drive extends OpMode {
         //  this will cut the power to the wheel by 50 and 75 percent if needed for control
         if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
             if (gamepad1.right_trigger > 0 && gamepad1.left_trigger > 0) {
-                left = -gamepad1.left_stick_y / 4;
-                right = -gamepad1.right_stick_y / 4;
+                right = gamepad1.left_stick_y / 4;
+                left = gamepad1.right_stick_y / 4;
             } else {
-                left = -gamepad1.left_stick_y / 2;
-                right = -gamepad1.right_stick_y / 2;
+                right = gamepad1.left_stick_y / 2;
+                left = gamepad1.right_stick_y / 2;
             }
         } else {
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
+            right  = gamepad1.left_stick_y;
+            left= gamepad1.right_stick_y;
         }
 
         //  controls the arm.  gives constant power to hold arm in air.  Cuts down power percent to prevent damage
@@ -118,10 +124,18 @@ public class Disc_Drive extends OpMode {
 
         //  THis is for side ways movement changes the power to the wheels.  Power level is still the same as above
         */
-        if (gamepad2.left_stick_y>0){
-            robot.arm.setPower(.8);
-        } else if (gamepad2.left_stick_y<0){ robot.arm.setPower(-.8);
-        }else robot.arm.setPower(.2);
+
+        if (gamepad2.left_stick_y!=0){
+            robot.arm.setPower(gamepad2.left_stick_y/8);
+            arm = robot.arm.getCurrentPosition();
+        }
+        if (robot.arm.getCurrentPosition()>arm+10){
+            armpower=robot.arm.getPower();
+            robot.arm.setPower(armpower-.005);
+        } else if (robot.arm.getCurrentPosition()<arm-10){
+            armpower=robot.arm.getPower();
+            robot.arm.setPower(armpower+.005);
+        }
         if (gamepad1.left_bumper) {
             robot.DriveLeft1.setPower(-left);
             robot.DriveRight1.setPower(right);
@@ -138,8 +152,11 @@ public class Disc_Drive extends OpMode {
             robot.DriveLeft2.setPower(left);
             robot.DriveRight2.setPower(right);
         }
+        current=robot.arm.getCurrentPosition();
         telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addData("arm", "%.2f", arm);
+        telemetry.addData("ArmCurrent", "%.2f", current);
         telemetry.update();
 
     }

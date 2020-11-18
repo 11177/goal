@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -20,7 +22,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Disabled
+//@Disabled
 @Autonomous(name = "disk", group = "disk")
 public class AutoDraft extends LinearOpMode {
 
@@ -58,6 +60,7 @@ public class AutoDraft extends LinearOpMode {
     private static int DistanceStart = 0;
     private static int TurnStart = 0;
     private static int backstart =0;
+    private static int ArmAuto =0;
 
     HardwareCompBot robot = new HardwareCompBot();   // Use a Pushbot's hardware
 
@@ -95,27 +98,44 @@ public class AutoDraft extends LinearOpMode {
 
             if (totals >= 4) {
                 TurnStart = -90;
-                DistanceStart = 121;
+                DistanceStart = 88;
                 backstart =48;
+                ArmAuto = 6;
             } else if (totals <= 1) {
                 TurnStart = -90;
-                DistanceStart = 74;
+                DistanceStart = 41;
                 backstart = 0;
+                ArmAuto = 74;
             } else {
                 TurnStart = 90;
-                DistanceStart = 97;
+                DistanceStart = 64;
                 backstart = 24;
+                ArmAuto = 18;
             }
             totals = 0;
         }
         while (opModeIsActive()) {
-        gyroDrive(DRIVE_SPEED, DistanceStart,0, 30);
-        gyroTurn(TurnStart, TURN_SPEED);
-        gyroDrive(DRIVE_SPEED, 6, TurnStart, 30);
-        gyroDrive(DRIVE_SPEED, -6, TurnStart, 30);
-        gyroTurn(TURN_SPEED, -TurnStart);
-        gyroDrive(DRIVE_SPEED, backstart,0, 30);
-        gyroHold(DRIVE_SPEED, 0, 30);
+            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.claw.setPosition(1);
+            gyroDrive(DRIVE_SPEED,6,0,30);
+            gyroTurn(TURN_SPEED,90);
+            gyroDrive(DRIVE_SPEED,6,90,30);
+            gyroTurn(TURN_SPEED,0);
+            gyroDrive(DRIVE_SPEED,27,0,30);
+            gyroTurn(TURN_SPEED,-90);
+            gyroDrive(DRIVE_SPEED,6,-90,30);
+            gyroTurn(TURN_SPEED,0);
+            gyroTurn(TurnStart, TURN_SPEED);
+            gyroDrive(DRIVE_SPEED, 6, TurnStart, 30);
+            gyroDrive(DRIVE_SPEED, -6, TurnStart, 30);
+            gyroTurn(TURN_SPEED, -TurnStart);
+            gyroDrive(DRIVE_SPEED, ArmAuto, 0, 10);
+            robot.claw.setPosition(0);
+            robot.arm.setPower(.2);
+            gyroHold(DRIVE_SPEED,0,2);
+            robot.arm.setPower(-.1);
+            gyroDrive(DRIVE_SPEED, backstart,0, 30);
+            gyroHold(DRIVE_SPEED, 0, 30);
         }
     }
 
@@ -237,7 +257,36 @@ public class AutoDraft extends LinearOpMode {
 
 
         // Ensure that the opmode is still active
+        if (opModeIsActive()) {
 
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int) (distance * COUNTS_PER_INCH);
+            newLeftTarget1 = robot.DriveLeft1.getCurrentPosition() + moveCounts;
+            newRightTarget1 = robot.DriveLeft1.getCurrentPosition() + moveCounts;
+            newLeftTarget2 = robot.DriveLeft2.getCurrentPosition() + moveCounts;
+            newRightTarget2 = robot.DriveRight2.getCurrentPosition() + moveCounts;
+
+            // Set Target and Turn On RUN_TO_POSITION
+            robot.DriveLeft1.setTargetPosition(newLeftTarget1);
+            robot.DriveRight1.setTargetPosition(newRightTarget1);
+            robot.DriveLeft2.setTargetPosition(newLeftTarget2);
+            robot.DriveRight2.setTargetPosition(newRightTarget2);
+            robot.DriveLeft1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.DriveRight1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.DriveLeft2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.DriveRight2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // start motion.
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            robot.DriveLeft1.setPower(speed);
+            robot.DriveRight1.setPower(speed);
+            robot.DriveLeft2.setPower(speed);
+            robot.DriveRight2.setPower(speed);
+
+            //new timer to time out drive step
+            ElapsedTime holdTimer = new ElapsedTime();
+            // keep looping while we have time remaining.
+            holdTimer.reset();}
     }public void gyroTurn(double speed, double angle) {
 
         //ElapsedTime holdTimer = new ElapsedTime();
