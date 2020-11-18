@@ -43,7 +43,11 @@ public class Disc_Drive extends OpMode {
     /* Declare OpMode members. */
     HardwareCompBot robot = new HardwareCompBot(); // use the class created to define a Pushbot's hardware
     private static ElapsedTime runtime = new ElapsedTime();
-
+    double left;
+    double right;
+    double arm = 0;
+    double armpower;
+    double current;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -58,6 +62,7 @@ public class Disc_Drive extends OpMode {
 
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         //robot.track.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //view.runOpMode();
         // Send telemetry message to signify robot waiting;
@@ -85,11 +90,7 @@ public class Disc_Drive extends OpMode {
     @SuppressLint("DefaultLocale")
     @Override
     public void loop() {
-        double left;
-        double right;
-        double arm = 0;
-        double armpower;
-        double current;
+
         // Changes the led color for end game
      /*   if (runtime.seconds() >= 110) {
             robot.light.setPosition(.2775);
@@ -105,15 +106,15 @@ public class Disc_Drive extends OpMode {
         //  this will cut the power to the wheel by 50 and 75 percent if needed for control
         if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
             if (gamepad1.right_trigger > 0 && gamepad1.left_trigger > 0) {
-                right = gamepad1.left_stick_y / 4;
-                left = gamepad1.right_stick_y / 4;
+                left = -gamepad1.left_stick_y / 4;
+                right= -gamepad1.right_stick_y / 4;
             } else {
-                right = gamepad1.left_stick_y / 2;
-                left = gamepad1.right_stick_y / 2;
+                left = -gamepad1.left_stick_y / 2;
+                right = -gamepad1.right_stick_y / 2;
             }
         } else {
-            right  = gamepad1.left_stick_y;
-            left= gamepad1.right_stick_y;
+            left = -gamepad1.left_stick_y;
+            right = -gamepad1.right_stick_y;
         }
 
         //  controls the arm.  gives constant power to hold arm in air.  Cuts down power percent to prevent damage
@@ -124,18 +125,20 @@ public class Disc_Drive extends OpMode {
 
         //  THis is for side ways movement changes the power to the wheels.  Power level is still the same as above
         */
+        if (robot.arm.getCurrentPosition()>arm+5){
+            armpower=robot.arm.getPower();
+            robot.arm.setPower(armpower-.0005);
+        } else if (robot.arm.getCurrentPosition()<arm-5){
+            armpower=robot.arm.getPower();
+            robot.arm.setPower(armpower+.0005);
+        } else robot.arm.setPower(0);
 
         if (gamepad2.left_stick_y!=0){
-            robot.arm.setPower(gamepad2.left_stick_y/8);
+            robot.arm.setPower(-gamepad2.left_stick_y/8);
             arm = robot.arm.getCurrentPosition();
         }
-        if (robot.arm.getCurrentPosition()>arm+10){
-            armpower=robot.arm.getPower();
-            robot.arm.setPower(armpower-.005);
-        } else if (robot.arm.getCurrentPosition()<arm-10){
-            armpower=robot.arm.getPower();
-            robot.arm.setPower(armpower+.005);
-        }
+
+        armpower=robot.arm.getPower();
         if (gamepad1.left_bumper) {
             robot.DriveLeft1.setPower(-left);
             robot.DriveRight1.setPower(right);
@@ -155,6 +158,7 @@ public class Disc_Drive extends OpMode {
         current=robot.arm.getCurrentPosition();
         telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addData("ArmPower", "%.2f", armpower);
         telemetry.addData("arm", "%.2f", arm);
         telemetry.addData("ArmCurrent", "%.2f", current);
         telemetry.update();

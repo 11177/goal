@@ -55,7 +55,6 @@ public class HardwareSpoopyBot {
     public DcMotor right1 = null;
     public DcMotor left2 = null;
     public DcMotor right2 = null;
-    public Servo light =null;
     /* local OpMode members. */
     private HardwareMap hwMap = null;
 
@@ -92,8 +91,6 @@ public class HardwareSpoopyBot {
         left2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        light = ahwMap.get(Servo.class, "light");
-        light.setPosition(.7625);
     }
 }
 

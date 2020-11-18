@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,6 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -63,12 +68,23 @@ public class AutoDraft extends LinearOpMode {
     private static int ArmAuto =0;
 
     HardwareCompBot robot = new HardwareCompBot();   // Use a Pushbot's hardware
+    BNO055IMU imu;
+    Orientation angles;
+
+
 
     public void runOpMode() throws InterruptedException {
         //if pos=A/none, go 74 inches if pos=6/1, go 97 If pos=c/4, go 121
         // turn, go forward 9 inches, and drop
         //tun back to normal, if pos=a/non go 0 if pos=b/1 go 24, if pos=c/4 go 48
+        robot.init(hardwareMap);
+        BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
+        parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters1);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //P.S. if you're using the latest version of easyopencv, you might need to change the next line to the following:
         phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
@@ -79,6 +95,7 @@ public class AutoDraft extends LinearOpMode {
         phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.SIDEWAYS_RIGHT);//display on RC
         //width, height
         //width = height in this case, because camera is in portrait mode.
+
         runtime.reset();
         while (!isStarted()) {
             for (int i = 0; i <= 7; i++) {
@@ -97,46 +114,48 @@ public class AutoDraft extends LinearOpMode {
             sleep(100);
 
             if (totals >= 4) {
-                TurnStart = -90;
-                DistanceStart = 88;
+                TurnStart = 30;
+                DistanceStart = 150;
                 backstart =48;
                 ArmAuto = 6;
             } else if (totals <= 1) {
-                TurnStart = -90;
-                DistanceStart = 41;
-                backstart = 0;
-                ArmAuto = 74;
+                TurnStart = 55;
+                DistanceStart = 90;
+                backstart = 48;
+                ArmAuto = 58;
             } else {
-                TurnStart = 90;
-                DistanceStart = 64;
-                backstart = 24;
+                TurnStart = 5;
+                DistanceStart = 90;
+                backstart = 48;
                 ArmAuto = 18;
             }
             totals = 0;
         }
-        while (opModeIsActive()) {
-            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.claw.setPosition(1);
+
+
+
             gyroDrive(DRIVE_SPEED,6,0,30);
-            gyroTurn(TURN_SPEED,90);
-            gyroDrive(DRIVE_SPEED,6,90,30);
-            gyroTurn(TURN_SPEED,0);
-            gyroDrive(DRIVE_SPEED,27,0,30);
-            gyroTurn(TURN_SPEED,-90);
-            gyroDrive(DRIVE_SPEED,6,-90,30);
-            gyroTurn(TURN_SPEED,0);
-            gyroTurn(TurnStart, TURN_SPEED);
-            gyroDrive(DRIVE_SPEED, 6, TurnStart, 30);
-            gyroDrive(DRIVE_SPEED, -6, TurnStart, 30);
-            gyroTurn(TURN_SPEED, -TurnStart);
-            gyroDrive(DRIVE_SPEED, ArmAuto, 0, 10);
-            robot.claw.setPosition(0);
-            robot.arm.setPower(.2);
-            gyroHold(DRIVE_SPEED,0,2);
-            robot.arm.setPower(-.1);
-            gyroDrive(DRIVE_SPEED, backstart,0, 30);
-            gyroHold(DRIVE_SPEED, 0, 30);
+            gyroDrive(DRIVE_SPEED,36,-45,30);
+            gyroDrive(DRIVE_SPEED,90,55,30);
+            gyroDrive(DRIVE_SPEED, -18, 55, 30);
+            gyroTurn(TURN_SPEED, 0);
+            gyroDrive(DRIVE_SPEED, ArmAuto, 3, 10);
+        robot.arm.setPower(0);
+        robot.arm.setTargetPosition(-450);  // max out track
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setPower(-.1);
+        //run track out while moving to block
+        while (robot.arm.isBusy() && opModeIsActive()) {
+
         }
+        robot.arm.setPower(.01);
+        robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.claw.setPosition(0);
+            gyroHold(DRIVE_SPEED,0,2);
+        robot.arm.setPower(0);
+        gyroDrive(DRIVE_SPEED, backstart,0, 30);
+            gyroHold(DRIVE_SPEED, 0, 30);
+
     }
 
     //detection pipeline
@@ -237,7 +256,8 @@ public class AutoDraft extends LinearOpMode {
         }
     }
 
-    private void gyroDrive(double driveSpeed,
+
+    private void gyroDrive(double driveSpeed, //never mess up the speed
                            double distance,
                            double angle,
                            double timed) {
@@ -262,7 +282,7 @@ public class AutoDraft extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             moveCounts = (int) (distance * COUNTS_PER_INCH);
             newLeftTarget1 = robot.DriveLeft1.getCurrentPosition() + moveCounts;
-            newRightTarget1 = robot.DriveLeft1.getCurrentPosition() + moveCounts;
+            newRightTarget1 = robot.DriveRight1.getCurrentPosition() + moveCounts;
             newLeftTarget2 = robot.DriveLeft2.getCurrentPosition() + moveCounts;
             newRightTarget2 = robot.DriveRight2.getCurrentPosition() + moveCounts;
 
@@ -286,13 +306,75 @@ public class AutoDraft extends LinearOpMode {
             //new timer to time out drive step
             ElapsedTime holdTimer = new ElapsedTime();
             // keep looping while we have time remaining.
-            holdTimer.reset();}
-    }public void gyroTurn(double speed, double angle) {
+            holdTimer.reset();
+
+            // keep looping while we are still active, not past timer, and all motors are running.  This will stop if any are false
+            while (opModeIsActive() && holdTimer.time() < timed &&
+                    (robot.DriveLeft1.isBusy() && robot.DriveRight1.isBusy() && robot.DriveLeft2.isBusy() && robot.DriveRight2.isBusy())) {
+
+                // adjust relative speed based on heading error.
+                error = getError(angle);
+                steer = getSteer(error, P_DRIVE_COEFF);
+                /*
+                // Slow down to help with control and prevent skidding
+                currentReading = robot.right1.getCurrentPosition(); //this part is a slowdown to help reduce mess-ups, especially when grabbing block.
+
+                if (distance > 0) {
+                    if (currentReading > (newRightTarget1 - (6 * COUNTS_PER_INCH))) {
+                        speed = driveSpeed * .75;
+                        if (currentReading > (newRightTarget1 - (3 * COUNTS_PER_INCH))) {
+                            speed = driveSpeed * .5;
+                        }
+                    }
+                } else {
+                    if (currentReading < (newRightTarget1 + (6 * COUNTS_PER_INCH))) {
+                        speed = driveSpeed * .75;
+                        if (currentReading < (newRightTarget1 + (3 * COUNTS_PER_INCH))) {
+                            speed = driveSpeed * .5;
+                        }
+                    }
+                }
+                */
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
+
+                leftSpeed = speed - steer; //left is reversed
+                rightSpeed = speed + steer;
+
+                // Normalize speeds if either one exceeds +/- 1.0;
+                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                if (max > 1.0) {
+                    leftSpeed /= max;
+                    rightSpeed /= max;
+                }
+
+                robot.DriveLeft1.setPower(leftSpeed);
+                robot.DriveRight1.setPower(rightSpeed);
+                robot.DriveLeft2.setPower(leftSpeed);
+                robot.DriveRight2.setPower(rightSpeed);
+
+            }
+
+            // Stop all motion;
+            robot.DriveLeft1.setPower(0);
+            robot.DriveRight1.setPower(0);
+            robot.DriveLeft2.setPower(0);
+            robot.DriveRight2.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.DriveLeft1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.DriveRight1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.DriveLeft2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.DriveRight2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+    public void gyroTurn(double speed, double angle) {
 
         //ElapsedTime holdTimer = new ElapsedTime();
 
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
@@ -327,13 +409,83 @@ public class AutoDraft extends LinearOpMode {
         robot.DriveRight2.setPower(0);
     }
 
-    private void onHeading(double speed, double angle, double PCoeff) {
+    /*
+     * Perform one cycle of closed loop heading control.
+     *
+     * @param speed  Desired speed of turn.
+     * @param angle  Absolute Angle (in Degrees) relative to last gyro reset.
+     *               0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *               If a relative angle is required, add/subtract from current heading.
+     * @param PCoeff Proportional Gain coefficient
+     * @return
+     */
+    private boolean onHeading(double speed, double angle, double PCoeff) {
         double error;
         double steer;
         boolean onTarget = false;
         double leftSpeed;
         double rightSpeed;
 
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftSpeed = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        } else {
+            steer = getSteer(error, PCoeff);
+            rightSpeed = speed * steer;
+            leftSpeed = -rightSpeed;
+        }
+
+        // Send desired speeds to motors.
+        robot.DriveLeft1.setPower(leftSpeed);
+        robot.DriveRight1.setPower(rightSpeed);
+        robot.DriveLeft2.setPower(leftSpeed);
+        robot.DriveRight2.setPower(rightSpeed);
+        /*
+        // Display it for the driver.
+        telemetry.addData("Target", "%5.2f", angle);
+        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+
+         */
+        return onTarget;
     }
+
+    /*
+     * getError determines the error between the target angle and the robot's current heading
+     *
+     * @param targetAngle Desired angle (relative to global reference established at last Gyro Reset).
+     * @return error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
+     * +ve error means the robot should turn LEFT (CCW) to reduce error.
+     */
+    private double getError(double targetAngle) {
+
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        robotError = targetAngle - angles.firstAngle;
+        while (robotError > 180) robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    /*
+     * returns desired steering force.  +/- 1 range.  +ve = steer left
+     *
+     * @param error  Error angle in robot relative degrees
+     * @param PCoeff Proportional Gain Coefficient
+     * @return
+     */
+    private double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
+    }
+
+
 
 }

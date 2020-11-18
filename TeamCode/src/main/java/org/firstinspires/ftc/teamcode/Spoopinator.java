@@ -92,15 +92,10 @@ public class Spoopinator extends OpMode {
     public void loop() {
         double left;
         double right;
-        double color=0;
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
-        if (gamepad1.x) {spoopinator.light.setPosition(.5275);}
-        if (gamepad1.y) {spoopinator.light.setPosition(.5825);}
-        if (gamepad1.a) {spoopinator.light.setPosition(.4675);}
-        if (gamepad1.b) {spoopinator.light.setPosition(.6175);}
 
         if (gamepad1.left_bumper) {
             spoopinator.left1.setPower(-left);
