@@ -125,18 +125,18 @@ public class Disc_Drive extends OpMode {
 
         //  THis is for side ways movement changes the power to the wheels.  Power level is still the same as above
         */
-        if (robot.arm.getCurrentPosition()>arm+5){
+
+
+        if (gamepad2.left_stick_y!=0){
+            robot.arm.setPower(-gamepad2.left_stick_y/6);
+            arm = robot.arm.getCurrentPosition();
+        }else if (robot.arm.getCurrentPosition()>arm+5){
             armpower=robot.arm.getPower();
             robot.arm.setPower(armpower-.0005);
         } else if (robot.arm.getCurrentPosition()<arm-5){
             armpower=robot.arm.getPower();
             robot.arm.setPower(armpower+.0005);
         } else robot.arm.setPower(0);
-
-        if (gamepad2.left_stick_y!=0){
-            robot.arm.setPower(-gamepad2.left_stick_y/8);
-            arm = robot.arm.getCurrentPosition();
-        }
 
         armpower=robot.arm.getPower();
         if (gamepad1.left_bumper) {

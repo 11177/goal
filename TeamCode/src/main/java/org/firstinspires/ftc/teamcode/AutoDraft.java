@@ -35,14 +35,14 @@ public class AutoDraft extends LinearOpMode {
     private static float rectWidth = 1.5f / 8f;
     private static float offsetX = 0f / 8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
     private static float offsetY = 0f / 8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
-    private static float[] point1 = {4f / 8f + offsetX, 2.6f / 8f + offsetY};
-    private static float[] point2 = {4f / 8f + offsetX, 2.7f / 8f + offsetY};
-    private static float[] point3 = {4f / 8f + offsetX, 2.8f / 8f + offsetY};
-    private static float[] point4 = {4f / 8f + offsetX, 2.9f / 8f + offsetY};
-    private static float[] point5 = {4f / 8f + offsetX, 3f / 8f + offsetY};
-    private static float[] point6 = {4f / 8f + offsetX, 3.1f / 8f + offsetY};
-    private static float[] point7 = {4f / 8f + offsetX, 3.2f / 8f + offsetY};
-    private static float[] point8 = {4f / 8f + offsetX, 3.3f / 8f + offsetY};
+    private static float[] point1 = {3.7f / 8f + offsetX, 3.8f / 8f + offsetY};
+    private static float[] point2 = {3.7f / 8f + offsetX, 3.9f / 8f + offsetY};
+    private static float[] point3 = {3.7f / 8f + offsetX, 4f / 8f + offsetY};
+    private static float[] point4 = {3.7f / 8f + offsetX, 4.1f / 8f + offsetY};
+    private static float[] point5 = {3.7f / 8f + offsetX, 4.2f / 8f + offsetY};
+    private static float[] point6 = {3.7f / 8f + offsetX, 4.3f / 8f + offsetY};
+    private static float[] point7 = {3.7f / 8f + offsetX, 4.4f / 8f + offsetY};
+    private static float[] point8 = {3.7f / 8f + offsetX, 4.5f / 8f + offsetY};
     private static int[] vals = {-1, -1, -1, -1, -1, -1, -1, -1};
     private final int rows = 640;
     private static int totals = 0;
@@ -115,32 +115,33 @@ public class AutoDraft extends LinearOpMode {
 
             if (totals >= 4) {
                 TurnStart = 30;
-                DistanceStart = 150;
+                DistanceStart = 115;
                 backstart = -48;
-                ArmAuto = 5;
+                ArmAuto = 15;
             } else if (totals <= 1) {
                 TurnStart = 55;
                 DistanceStart = 90;
                 backstart = -48;
-                ArmAuto = 50;
+                ArmAuto = 55;
             } else {
-                TurnStart = 5;
-                DistanceStart = 90;
+                TurnStart = 20;
+                DistanceStart = 70;
                 backstart = -48;
-                ArmAuto = 15;
+                ArmAuto = 45;
             }
             totals = 0;
         }
 
 
 
-            gyroDrive(DRIVE_SPEED,6,0,30);
-            gyroDrive(DRIVE_SPEED,36,-45,30);
-            gyroDrive(DRIVE_SPEED,90,55,30);
-            gyroDrive(DRIVE_SPEED, -18, 55, 30);
-            gyroTurn(TURN_SPEED, 0);
-            gyroDrive(DRIVE_SPEED, ArmAuto, 5, 10);
-        robot.arm.setPower(0);
+        gyroDrive(DRIVE_SPEED,6,0,30,0);
+        gyroDrive(DRIVE_SPEED,36,-45,30,0);
+        gyroDrive(DRIVE_SPEED,DistanceStart,TurnStart,30,0);
+        gyroDrive(DRIVE_SPEED, -18, 55, 30,0);
+        gyroTurn(TURN_SPEED, 0);
+        robot.arm.setPower(-.1);
+        gyroDrive(DRIVE_SPEED, ArmAuto, 5, 10,-400);
+
         robot.arm.setTargetPosition(-450);  // max out track
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(-.1);
@@ -151,10 +152,11 @@ public class AutoDraft extends LinearOpMode {
         robot.arm.setPower(.01);
         robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.claw.setPosition(0);
-            gyroHold(DRIVE_SPEED,0,2);
+        gyroHold(DRIVE_SPEED,0,2);
+
+        gyroDrive(DRIVE_SPEED, backstart,0, 30,-450);
         robot.arm.setPower(0);
-        gyroDrive(DRIVE_SPEED, backstart,0, 30);
-            gyroHold(DRIVE_SPEED, 0, 30);
+        gyroHold(DRIVE_SPEED, 0, 30);
 
     }
 
@@ -192,7 +194,7 @@ public class AutoDraft extends LinearOpMode {
             Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
 
             //b&w
-            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 75, 255, Imgproc.THRESH_BINARY_INV);
+            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 100, 255, Imgproc.THRESH_BINARY_INV);
 
             //outline/contour
             Imgproc.findContours(thresholdMat, contoursList, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -260,7 +262,8 @@ public class AutoDraft extends LinearOpMode {
     private void gyroDrive(double driveSpeed, //never mess up the speed
                            double distance,
                            double angle,
-                           double timed) {
+                           double timed,
+                           double arm ) {
 
         int newLeftTarget1;
         int newRightTarget1;
@@ -274,6 +277,7 @@ public class AutoDraft extends LinearOpMode {
         double steer;
         double leftSpeed;
         double rightSpeed;
+        double armpower;
 
 
         // Ensure that the opmode is still active
@@ -353,6 +357,13 @@ public class AutoDraft extends LinearOpMode {
                 robot.DriveRight1.setPower(rightSpeed);
                 robot.DriveLeft2.setPower(leftSpeed);
                 robot.DriveRight2.setPower(rightSpeed);
+                if (robot.arm.getCurrentPosition()>arm+5){
+                    armpower=robot.arm.getPower();
+                    robot.arm.setPower(armpower-.0005);
+                } else if (robot.arm.getCurrentPosition()<arm-5){
+                    armpower=robot.arm.getPower();
+                    robot.arm.setPower(armpower+.0005);
+                } else robot.arm.setPower(0);
 
             }
 
