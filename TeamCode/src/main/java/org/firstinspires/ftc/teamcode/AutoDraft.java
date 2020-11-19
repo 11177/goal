@@ -116,18 +116,18 @@ public class AutoDraft extends LinearOpMode {
             if (totals >= 4) {
                 TurnStart = 30;
                 DistanceStart = 150;
-                backstart =48;
-                ArmAuto = 6;
+                backstart = -48;
+                ArmAuto = 5;
             } else if (totals <= 1) {
                 TurnStart = 55;
                 DistanceStart = 90;
-                backstart = 48;
-                ArmAuto = 58;
+                backstart = -48;
+                ArmAuto = 50;
             } else {
                 TurnStart = 5;
                 DistanceStart = 90;
-                backstart = 48;
-                ArmAuto = 18;
+                backstart = -48;
+                ArmAuto = 15;
             }
             totals = 0;
         }
@@ -139,7 +139,7 @@ public class AutoDraft extends LinearOpMode {
             gyroDrive(DRIVE_SPEED,90,55,30);
             gyroDrive(DRIVE_SPEED, -18, 55, 30);
             gyroTurn(TURN_SPEED, 0);
-            gyroDrive(DRIVE_SPEED, ArmAuto, 3, 10);
+            gyroDrive(DRIVE_SPEED, ArmAuto, 5, 10);
         robot.arm.setPower(0);
         robot.arm.setTargetPosition(-450);  // max out track
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
