@@ -24,6 +24,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class AutoDraft extends LinearOpMode {
     private static int TurnStart = 0;
     private static int backstart =0;
     private static int ArmAuto =0;
+    private static int mid =0;
 
     HardwareCompBot robot = new HardwareCompBot();   // Use a Pushbot's hardware
     BNO055IMU imu;
@@ -116,18 +118,21 @@ public class AutoDraft extends LinearOpMode {
             if (totals >= 4) {
                 TurnStart = 30;
                 DistanceStart = 115;
-                backstart = -48;
-                ArmAuto = 15;
+                backstart = -40;
+                ArmAuto = 17;
+                mid=0;
             } else if (totals <= 1) {
                 TurnStart = 55;
                 DistanceStart = 90;
-                backstart = -48;
-                ArmAuto = 55;
+                backstart = -40;
+                ArmAuto = 56;
+                mid=0;
             } else {
                 TurnStart = 20;
-                DistanceStart = 70;
-                backstart = -48;
-                ArmAuto = 45;
+                DistanceStart = 75;
+                backstart = -40;
+                ArmAuto = 0;
+                mid =1;
             }
             totals = 0;
         }
@@ -137,24 +142,32 @@ public class AutoDraft extends LinearOpMode {
         gyroDrive(DRIVE_SPEED,6,0,30,0);
         gyroDrive(DRIVE_SPEED,36,-45,30,0);
         gyroDrive(DRIVE_SPEED,DistanceStart,TurnStart,30,0);
-        gyroDrive(DRIVE_SPEED, -18, 55, 30,0);
-        gyroTurn(TURN_SPEED, 0);
-        robot.arm.setPower(-.1);
-        gyroDrive(DRIVE_SPEED, ArmAuto, 5, 10,-400);
+        gyroDrive(DRIVE_SPEED, -8, 55, 30,0);
 
-        robot.arm.setTargetPosition(-450);  // max out track
-        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm.setPower(-.1);
-        //run track out while moving to block
-        while (robot.arm.isBusy() && opModeIsActive()) {
-
+        if (mid == 1){
+            gyroTurn(TURN_SPEED,-45);
+            gyroDrive(DRIVE_SPEED,25,-45,10,0);
+            gyroTurn(TURN_SPEED,50);
+            gyroDrive(DRIVE_SPEED,45,50,10,0);
+            gyroTurn(TURN_SPEED,0);
+            gyroDrive(DRIVE_SPEED,-33,0,2,0);
+        } if (mid == 0) {
+            gyroTurn(TURN_SPEED, 0);
+            gyroDrive(DRIVE_SPEED, ArmAuto, -5, 10, 0);
         }
-        robot.arm.setPower(.01);
-        robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.claw.setPosition(0);
+        //robot.arm.setTargetPosition(-450);
+        //robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setPower(-.1);
+        //robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gyroHold(DRIVE_SPEED,0,2);
-
-        gyroDrive(DRIVE_SPEED, backstart,0, 30,-450);
+        robot.claw.setPosition(0);
+        robot.arm.setPower(.05);
+        gyroHold(DRIVE_SPEED,0,1);
+        gyroDrive(DRIVE_SPEED,-10,0,5,0);
+        gyroTurn(TURN_SPEED,90);
+        gyroDrive(DRIVE_SPEED,-20,90,5,0);
+        gyroTurn(TURN_SPEED,20);
+        gyroDrive(DRIVE_SPEED, backstart,20, 30,-450);
         robot.arm.setPower(0);
         gyroHold(DRIVE_SPEED, 0, 30);
 
