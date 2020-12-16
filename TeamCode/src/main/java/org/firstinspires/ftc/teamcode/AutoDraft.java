@@ -120,17 +120,17 @@ public class AutoDraft extends LinearOpMode {
                 DistanceStart = 115;
                 backstart = -40;
                 ArmAuto = 17;
-                mid=0;
-            } else if (totals <= 1) {
+                mid=9001;
+            } else if (totals <= 0) {
                 TurnStart = 55;
                 DistanceStart = 90;
                 backstart = -40;
-                ArmAuto = 56;
+                ArmAuto = 45;
                 mid=0;
             } else {
                 TurnStart = 20;
                 DistanceStart = 75;
-                backstart = -40;
+                backstart = -45;
                 ArmAuto = 0;
                 mid =1;
             }
@@ -150,10 +150,15 @@ public class AutoDraft extends LinearOpMode {
             gyroTurn(TURN_SPEED,50);
             gyroDrive(DRIVE_SPEED,45,50,10,0);
             gyroTurn(TURN_SPEED,0);
-            gyroDrive(DRIVE_SPEED,-33,0,2,0);
+            gyroDrive(DRIVE_SPEED,-6,0,2,0);
         } if (mid == 0) {
             gyroTurn(TURN_SPEED, 0);
             gyroDrive(DRIVE_SPEED, ArmAuto, -5, 10, 0);
+        } else {
+            gyroTurn(TURN_SPEED, -90);
+            gyroDrive(DRIVE_SPEED,ArmAuto,-90,5,0);
+            gyroTurn(TURN_SPEED,0);
+            gyroDrive(DRIVE_SPEED,10,0,5,0);
         }
         //robot.arm.setTargetPosition(-450);
         //robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -168,8 +173,10 @@ public class AutoDraft extends LinearOpMode {
         gyroDrive(DRIVE_SPEED,-20,90,5,0);
         gyroTurn(TURN_SPEED,20);
         gyroDrive(DRIVE_SPEED, backstart,20, 30,-450);
+        robot.arm.setPower(-.05);
+        gyroHold(DRIVE_SPEED, 0, 2);
         robot.arm.setPower(0);
-        gyroHold(DRIVE_SPEED, 0, 30);
+        gyroHold(DRIVE_SPEED,0,30);
 
     }
 

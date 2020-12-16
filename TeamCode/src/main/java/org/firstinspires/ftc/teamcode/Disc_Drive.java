@@ -117,15 +117,10 @@ public class Disc_Drive extends OpMode {
             right = -gamepad1.right_stick_y;
         }
 
-        //  controls the arm.  gives constant power to hold arm in air.  Cuts down power percent to prevent damage
-       /* if (gamepad2.dpad_up){
-            robot.arm.setPosition(1);
-        } else if (gamepad2.dpad_down){ robot.arm.setPosition(.1);
-        }else robot.arm.setPosition(.5);
-
-        //  THis is for side ways movement changes the power to the wheels.  Power level is still the same as above
-        */
-
+        if (gamepad2.x){
+            robot.RWheel.setPower(0);
+            robot.LWheel.setPower(0);
+        }
 
         if (gamepad2.left_stick_y!=0){
             robot.arm.setPower(-gamepad2.left_stick_y/6);
