@@ -14,13 +14,8 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 
-dependencies {
-    implementation 'org.openftc:easyopencv:1.3.2'
-}
-repositories {
-    maven { url = "https://dl.bintray.com/first-tech-challenge/ftcsdk/" }
+android {
+    buildToolsVersion = '29.0.2'
 }
 
-dependencies {
-    annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
-}
+
