@@ -48,6 +48,7 @@ public class Disc_Drive extends OpMode {
     double arm = 0;
     double armpower;
     double current;
+    double wheel;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -116,6 +117,11 @@ public class Disc_Drive extends OpMode {
             left = -gamepad1.left_stick_y;
             right = -gamepad1.right_stick_y;
         }
+
+        // wheel test right thumb controller 2
+        wheel = -gamepad2.right_stick_y;
+        robot.LWheel.setPower(wheel);
+        robot.RWheel.setPower(-wheel);
 
         if (gamepad2.x){
             robot.RWheel.setPower(0);

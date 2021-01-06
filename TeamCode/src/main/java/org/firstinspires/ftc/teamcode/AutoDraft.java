@@ -63,11 +63,11 @@ public class AutoDraft extends LinearOpMode {
     private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
     private static final double P_DRIVE_COEFF = 0.05;
-    private static int DistanceStart = 0;
-    private static int TurnStart = 0;
-    private static int backstart =0;
-    private static int ArmAuto =0;
-    private static int mid =0;
+    private static int StartDistance = 0;
+    private static int StartAngle = 0;
+    private static int StartBack = 0;
+    private static int ReturnDistance = 0;
+    private static int ReturnAngle = 0;
 
     HardwareCompBot robot = new HardwareCompBot();   // Use a Pushbot's hardware
     BNO055IMU imu;
@@ -78,7 +78,7 @@ public class AutoDraft extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //if pos=A/none, go 74 inches if pos=6/1, go 97 If pos=c/4, go 121
         // turn, go forward 9 inches, and drop
-        //tun back to normal, if pos=a/non go 0 if pos=b/1 go 24, if pos=c/4 go 48
+        //turn back to normal, if pos=a/non go 0 if pos=b/1 go 24, if pos=c/4 go 48
         robot.init(hardwareMap);
         BNO055IMU.Parameters parameters1 = new BNO055IMU.Parameters();
         parameters1.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -94,7 +94,7 @@ public class AutoDraft extends LinearOpMode {
 
         phoneCam.openCameraDevice();//open camera
         phoneCam.setPipeline(new StageSwitchingPipeline());//different stages
-        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.SIDEWAYS_RIGHT);//display on RC
+        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPSIDE_DOWN);//display on RC
         //width, height
         //width = height in this case, because camera is in portrait mode.
 
@@ -116,23 +116,21 @@ public class AutoDraft extends LinearOpMode {
             sleep(100);
 
             if (totals >= 4) {
-                TurnStart = 30;
-                DistanceStart = 115;
-                backstart = -40;
-                ArmAuto = 17;
-                mid=9001;
+                StartAngle = 30;
+                StartDistance = 115;
+                StartBack = -40;
+                ReturnAngle = 28;
+                ReturnDistance = -125;
             } else if (totals <= 0) {
-                TurnStart = 55;
-                DistanceStart = 90;
-                backstart = -40;
-                ArmAuto = 45;
-                mid=0;
+                StartAngle = 55;
+                StartDistance= 90;
+                StartBack = -40;
+               ReturnAngle = 55;
+               ReturnDistance = -75;
             } else {
-                TurnStart = 20;
-                DistanceStart = 75;
-                backstart = -45;
-                ArmAuto = 0;
-                mid =1;
+                StartAngle = 20;
+                StartDistance = 75;
+                StartBack = -45;
             }
             totals = 0;
         }
@@ -141,28 +139,11 @@ public class AutoDraft extends LinearOpMode {
 
         gyroDrive(DRIVE_SPEED,6,0,30,0);
         gyroDrive(DRIVE_SPEED,36,-45,30,0);
-        gyroDrive(DRIVE_SPEED,DistanceStart,TurnStart,30,0);
-        gyroDrive(DRIVE_SPEED, -8, 55, 30,0);
+        gyroDrive(DRIVE_SPEED,StartDistance,StartAngle,30,0);
 
-        if (mid == 1){
-            gyroTurn(TURN_SPEED,-45);
-            gyroDrive(DRIVE_SPEED,25,-45,10,0);
-            gyroTurn(TURN_SPEED,50);
-            gyroDrive(DRIVE_SPEED,45,50,10,0);
-            gyroTurn(TURN_SPEED,0);
-            gyroDrive(DRIVE_SPEED,-6,0,2,0);
-        } if (mid == 0) {
-            gyroTurn(TURN_SPEED, 0);
-            gyroDrive(DRIVE_SPEED, ArmAuto, -5, 10, 0);
-        } else {
-            gyroTurn(TURN_SPEED, -90);
-            gyroDrive(DRIVE_SPEED,ArmAuto,-90,5,0);
-            gyroTurn(TURN_SPEED,0);
-            gyroDrive(DRIVE_SPEED,10,0,5,0);
-        }
         //robot.arm.setTargetPosition(-450);
         //robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm.setPower(-.1);
+        /*robot.arm.setPower(-.1);
         //robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gyroHold(DRIVE_SPEED,0,2);
         robot.claw.setPosition(0);
@@ -171,13 +152,15 @@ public class AutoDraft extends LinearOpMode {
         gyroDrive(DRIVE_SPEED,-10,0,5,0);
         gyroTurn(TURN_SPEED,90);
         gyroDrive(DRIVE_SPEED,-20,90,5,0);
-        gyroTurn(TURN_SPEED,20);
-        gyroDrive(DRIVE_SPEED, backstart,20, 30,-450);
-        robot.arm.setPower(-.05);
-        gyroHold(DRIVE_SPEED, 0, 2);
-        robot.arm.setPower(0);
-        gyroHold(DRIVE_SPEED,0,30);
 
+         */
+        gyroTurn(TURN_SPEED,ReturnAngle);
+        gyroDrive(DRIVE_SPEED, ReturnDistance,ReturnAngle, 30,0);
+        gyroTurn(TURN_SPEED,90);
+        gyroDrive(DRIVE_SPEED,50,80,5,0);
+        gyroTurn(TURN_SPEED,65);
+        gyroDrive(DRIVE_SPEED,StartDistance+6,3,10,0);
+        gyroDrive(DRIVE_SPEED,StartBack,0,5,0);
     }
 
     //detection pipeline
