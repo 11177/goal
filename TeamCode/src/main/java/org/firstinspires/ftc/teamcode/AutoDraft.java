@@ -68,6 +68,8 @@ public class AutoDraft extends LinearOpMode {
     private static int StartBack = 0;
     private static int ReturnDistance = 0;
     private static int ReturnAngle = 0;
+    private static int drop2 = 0;
+    private static int mid = 0;
 
     HardwareCompBot robot = new HardwareCompBot();   // Use a Pushbot's hardware
     BNO055IMU imu;
@@ -121,16 +123,24 @@ public class AutoDraft extends LinearOpMode {
                 StartBack = -40;
                 ReturnAngle = 28;
                 ReturnDistance = -125;
+                drop2 = 120;
+                mid = 0;
             } else if (totals <= 0) {
                 StartAngle = 55;
                 StartDistance= 90;
-                StartBack = -40;
-               ReturnAngle = 55;
-               ReturnDistance = -75;
+                StartBack = 10;
+               ReturnAngle = 45;
+               ReturnDistance = -90;
+               drop2 = 65;
+               mid = 0;
             } else {
                 StartAngle = 20;
                 StartDistance = 75;
-                StartBack = -45;
+                StartBack = -25;
+                ReturnAngle = 25;
+                ReturnDistance = -90;
+                drop2 = 90;
+                mid = -12;
             }
             totals = 0;
         }
@@ -156,11 +166,21 @@ public class AutoDraft extends LinearOpMode {
          */
         gyroTurn(TURN_SPEED,ReturnAngle);
         gyroDrive(DRIVE_SPEED, ReturnDistance,ReturnAngle, 30,0);
+       /*
+        gyroHold(TURN_SPEED,5,1);
+        robot.lock.setPower(0);
+        gyroTurn(TURN_SPEED,0);
+        gyroTurn(TURN_SPEED,ReturnAngle);
+        */
+        gyroDrive(DRIVE_SPEED, ReturnDistance,ReturnAngle, 30,0);
         gyroTurn(TURN_SPEED,90);
-        gyroDrive(DRIVE_SPEED,50,80,5,0);
+        gyroDrive(DRIVE_SPEED,52,80,5,0);
         gyroTurn(TURN_SPEED,65);
-        gyroDrive(DRIVE_SPEED,StartDistance+6,3,10,0);
+        gyroDrive(DRIVE_SPEED,drop2,2 + mid,10,0);
         gyroDrive(DRIVE_SPEED,StartBack,0,5,0);
+        robot.arm.setPower(-.2);
+        gyroHold(TURN_SPEED,0,1.7);
+        robot.arm.setPower(0);
     }
 
     //detection pipeline
