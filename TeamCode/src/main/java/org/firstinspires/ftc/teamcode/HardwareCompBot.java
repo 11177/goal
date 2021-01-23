@@ -44,6 +44,8 @@ public class HardwareCompBot {
     Servo claw = null;
     DcMotor LWheel = null;
     DcMotor RWheel = null;
+    Servo LTrack = null;
+    Servo RTrack = null;
 
     /*
     DcMotor SpinIn = null;
@@ -73,6 +75,12 @@ public class HardwareCompBot {
         RWheel = ahwMap.get(DcMotor.class, "LaunchR");
         LWheel.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         RWheel.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        LTrack = ahwMap.get(Servo.class, "LTrack");
+        LTrack.setPosition(.5);
+        RTrack = ahwMap.get(Servo.class, "RTrack");
+        RTrack.setPosition(.5);
+        claw = ahwMap.get(Servo.class, "claw");
+        claw.setPosition(1);
         DriveLeft1.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         DriveRight1.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         DriveLeft2.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -85,8 +93,8 @@ public class HardwareCompBot {
         DriveLeft2.setPower(0);
         DriveRight2.setPower(0);
         arm.setPower(0);
-        LWheel.setPower(1);
-        RWheel.setPower(1);
+        //LWheel.setPower(1);
+        //RWheel.setPower(1);
   /*
         LaunchL.setPower(0);
         LaunchR.setPower(0);
@@ -101,8 +109,8 @@ public class HardwareCompBot {
         DriveLeft2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         DriveRight2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        RWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //LWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //RWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         /*
         LaunchL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         LaunchR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -119,8 +127,6 @@ public class HardwareCompBot {
 
       */
 
-        claw = ahwMap.get(Servo.class, "claw");
-        claw.setPosition(1);
 
        // light = ahwMap.get(Servo.class, "light");
       //  light.setPosition(.6975);

@@ -49,6 +49,8 @@ public class Disc_Drive extends OpMode {
     double armpower;
     double current;
     double wheel;
+    boolean x = true;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -99,6 +101,36 @@ public class Disc_Drive extends OpMode {
             robot.light.setPosition(.3375);
         } else robot.light.setPosition(.6545);
        */
+        if (x){
+            robot.RWheel.setPower(-1);
+            robot.LWheel.setPower(-1);
+        }
+        if (gamepad1.y){
+            robot.RTrack.setPosition(1);
+            robot.LTrack.setPosition(0);
+        }
+        if (gamepad1.a){
+            robot.RTrack.setPosition(0);
+            robot.LTrack.setPosition(1);
+        }
+        if (gamepad1.x){
+            robot.RTrack.setPosition(.5);
+            robot.LTrack.setPosition(.5);
+            if (x) {
+                robot.RWheel.setPower(0);
+                robot.LWheel.setPower(0);
+                x = false;
+            }else {
+                robot.RWheel.setPower(-1);
+                robot.LWheel.setPower(-1);
+                x = true;
+            }
+        }
+        if (gamepad1.b){
+            robot.RTrack.setPosition(.5);
+            robot.LTrack.setPosition(.5);
+        }
+
         if (gamepad2.left_bumper) {
             robot.claw.setPosition(1);
         } else if (gamepad2.right_bumper) {
@@ -119,17 +151,17 @@ public class Disc_Drive extends OpMode {
         }
 
         // wheel test right thumb controller 2
-        wheel = -gamepad2.right_stick_y;
-        robot.LWheel.setPower(wheel);
-        robot.RWheel.setPower(-wheel);
+        //wheel = -gamepad2.right_stick_y;
+        //robot.LWheel.setPower(wheel);
+        //robot.RWheel.setPower(-wheel);
 
-        if (gamepad2.x){
-            robot.RWheel.setPower(0);
-            robot.LWheel.setPower(0);
-        }
+        //if (gamepad2.x){
+        //    robot.RWheel.setPower(0);
+        //    robot.LWheel.setPower(0);
+        //}
 
         if (gamepad2.left_stick_y!=0){
-            robot.arm.setPower(-gamepad2.left_stick_y/6);
+            robot.arm.setPower(-gamepad2.left_stick_y/4);
             arm = robot.arm.getCurrentPosition();
         }else if (robot.arm.getCurrentPosition()>arm+5){
             armpower=robot.arm.getPower();

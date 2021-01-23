@@ -36,14 +36,14 @@ public class AutoDraft extends LinearOpMode {
     private static float rectWidth = 1.5f / 8f;
     private static float offsetX = 0f / 8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
     private static float offsetY = 0f / 8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
-    private static float[] point1 = {3.7f / 8f + offsetX, 3.8f / 8f + offsetY};
-    private static float[] point2 = {3.7f / 8f + offsetX, 3.9f / 8f + offsetY};
-    private static float[] point3 = {3.7f / 8f + offsetX, 4f / 8f + offsetY};
-    private static float[] point4 = {3.7f / 8f + offsetX, 4.1f / 8f + offsetY};
-    private static float[] point5 = {3.7f / 8f + offsetX, 4.2f / 8f + offsetY};
-    private static float[] point6 = {3.7f / 8f + offsetX, 4.3f / 8f + offsetY};
-    private static float[] point7 = {3.7f / 8f + offsetX, 4.4f / 8f + offsetY};
-    private static float[] point8 = {3.7f / 8f + offsetX, 4.5f / 8f + offsetY};
+    private static float[] point1 = {4f / 8f + offsetX, 3.8f / 8f + offsetY};
+    private static float[] point2 = {4f / 8f + offsetX, 3.9f / 8f + offsetY};
+    private static float[] point3 = {4f / 8f + offsetX, 4f / 8f + offsetY};
+    private static float[] point4 = {4f / 8f + offsetX, 4.1f / 8f + offsetY};
+    private static float[] point5 = {4f / 8f + offsetX, 4.2f / 8f + offsetY};
+    private static float[] point6 = {4f / 8f + offsetX, 4.3f / 8f + offsetY};
+    private static float[] point7 = {4f / 8f + offsetX, 4.4f / 8f + offsetY};
+    private static float[] point8 = {4f / 8f + offsetX, 4.5f / 8f + offsetY};
     private static int[] vals = {-1, -1, -1, -1, -1, -1, -1, -1};
     private final int rows = 640;
     private static int totals = 0;
@@ -96,7 +96,7 @@ public class AutoDraft extends LinearOpMode {
 
         phoneCam.openCameraDevice();//open camera
         phoneCam.setPipeline(new StageSwitchingPipeline());//different stages
-        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.UPSIDE_DOWN);//display on RC
+        phoneCam.startStreaming(rows, cols, OpenCvCameraRotation.SIDEWAYS_LEFT);//display on RC
         //width, height
         //width = height in this case, because camera is in portrait mode.
 
@@ -119,26 +119,26 @@ public class AutoDraft extends LinearOpMode {
 
             if (totals >= 4) {
                 StartAngle = 30;
-                StartDistance = 115;
+                StartDistance = 120;
                 StartBack = -40;
                 ReturnAngle = 28;
-                ReturnDistance = -125;
+                ReturnDistance = -122;
                 drop2 = 120;
                 mid = 0;
             } else if (totals <= 0) {
                 StartAngle = 55;
                 StartDistance= 90;
-                StartBack = 10;
+                StartBack = -5;
                ReturnAngle = 45;
-               ReturnDistance = -90;
+               ReturnDistance = -92;
                drop2 = 65;
-               mid = 0;
+               mid = -2;
             } else {
-                StartAngle = 20;
-                StartDistance = 75;
-                StartBack = -25;
-                ReturnAngle = 25;
-                ReturnDistance = -90;
+                StartAngle = 17;
+                StartDistance = 82;
+                StartBack = -20;
+                ReturnAngle = 22;
+                ReturnDistance = -100;
                 drop2 = 90;
                 mid = -12;
             }
@@ -171,8 +171,9 @@ public class AutoDraft extends LinearOpMode {
         robot.lock.setPower(0);
         gyroTurn(TURN_SPEED,0);
         gyroTurn(TURN_SPEED,ReturnAngle);
-        */
         gyroDrive(DRIVE_SPEED, ReturnDistance,ReturnAngle, 30,0);
+
+        */
         gyroTurn(TURN_SPEED,90);
         gyroDrive(DRIVE_SPEED,52,80,5,0);
         gyroTurn(TURN_SPEED,65);
