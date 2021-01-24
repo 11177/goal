@@ -49,7 +49,7 @@ public class Disc_Drive extends OpMode {
     double armpower;
     double current;
     double wheel;
-    boolean x = true;
+    boolean x = false;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -101,9 +101,15 @@ public class Disc_Drive extends OpMode {
             robot.light.setPosition(.3375);
         } else robot.light.setPosition(.6545);
        */
+
+
+        //Launcher Setting and button control
         if (x){
             robot.RWheel.setPower(-1);
             robot.LWheel.setPower(-1);
+        }else{
+            robot.RWheel.setPower(0);
+            robot.LWheel.setPower(0);
         }
         if (gamepad1.y){
             robot.RTrack.setPosition(1);
@@ -116,29 +122,15 @@ public class Disc_Drive extends OpMode {
         if (gamepad1.x){
             robot.RTrack.setPosition(.5);
             robot.LTrack.setPosition(.5);
-            if (x) {
-                robot.RWheel.setPower(0);
-                robot.LWheel.setPower(0);
-                x = false;
-            }else {
-                robot.RWheel.setPower(-1);
-                robot.LWheel.setPower(-1);
-                x = true;
-            }
+            x = false;
         }
         if (gamepad1.b){
-            robot.RTrack.setPosition(.5);
-            robot.LTrack.setPosition(.5);
+            x =true;
         }
 
-        if (gamepad2.left_bumper) {
-            robot.claw.setPosition(1);
-        } else if (gamepad2.right_bumper) {
-            robot.claw.setPosition(0);
-        }
         //  this will cut the power to the wheel by 50 and 75 percent if needed for control
-        if (gamepad1.left_trigger > 0 || gamepad1.right_trigger > 0) {
-            if (gamepad1.right_trigger > 0 && gamepad1.left_trigger > 0) {
+        if (gamepad1.left_trigger != 0 || gamepad1.right_trigger != 0) {
+            if (gamepad1.right_trigger != 0 && gamepad1.left_trigger != 0) {
                 left = -gamepad1.left_stick_y / 4;
                 right= -gamepad1.right_stick_y / 4;
             } else {
@@ -150,43 +142,62 @@ public class Disc_Drive extends OpMode {
             right = -gamepad1.right_stick_y;
         }
 
-        // wheel test right thumb controller 2
-        //wheel = -gamepad2.right_stick_y;
-        //robot.LWheel.setPower(wheel);
-        //robot.RWheel.setPower(-wheel);
 
-        //if (gamepad2.x){
-        //    robot.RWheel.setPower(0);
-        //    robot.LWheel.setPower(0);
-        //}
-
+        // Setup for arm control
         if (gamepad2.left_stick_y!=0){
-            robot.arm.setPower(-gamepad2.left_stick_y/4);
+            if (gamepad2.left_stick_y>0) {
+                armpower = -.2;
+            }else{
+                armpower = .2;
+            }
             arm = robot.arm.getCurrentPosition();
-        }else if (robot.arm.getCurrentPosition()>arm+5){
-            armpower=robot.arm.getPower();
-            robot.arm.setPower(armpower-.0005);
-        } else if (robot.arm.getCurrentPosition()<arm-5){
-            armpower=robot.arm.getPower();
-            robot.arm.setPower(armpower+.0005);
-        } else robot.arm.setPower(0);
+        }else if (robot.arm.getCurrentPosition()>arm){
+            if (armpower > 0){
+                armpower = -.01;
+            }else if (robot.arm.getCurrentPosition()>arm+25){
+                armpower = armpower - .0005;
+            }else if (robot.arm.getCurrentPosition()>arm+5) {
+                armpower = armpower - .00005;
+            } else{
+                armpower = armpower + .000005;
+            }
+        } else if (robot.arm.getCurrentPosition()<arm) {
+            if (armpower<0){
+                armpower = .01;
+            }else if (robot.arm.getCurrentPosition()<arm-25){
+                armpower = armpower + .0005;
+            }else if (robot.arm.getCurrentPosition()<arm-5){
+                armpower = armpower + .00005;
+            } else{
+                armpower = armpower - .000005;
+            }
+        }
 
-        armpower=robot.arm.getPower();
+        // all motor movements
         if (gamepad1.left_bumper) {
             robot.DriveLeft1.setPower(-left);
             robot.DriveRight1.setPower(right);
             robot.DriveLeft2.setPower(left);
             robot.DriveRight2.setPower(-right);
+            robot.arm.setPower(armpower);
         } else if (gamepad1.right_bumper) {
             robot.DriveLeft1.setPower(left);
             robot.DriveRight1.setPower(-right);
             robot.DriveLeft2.setPower(-left);
             robot.DriveRight2.setPower(right);
+            robot.arm.setPower(armpower);
         } else {
             robot.DriveLeft1.setPower(left);
             robot.DriveRight1.setPower(right);
             robot.DriveLeft2.setPower(left);
             robot.DriveRight2.setPower(right);
+            robot.arm.setPower(armpower);
+        }
+        // servo movements
+        if (gamepad2.left_bumper) {
+            robot.claw.setPosition(1);
+        } else if (gamepad2.right_bumper) {
+            robot.claw.setPosition(0);
         }
         current=robot.arm.getCurrentPosition();
         telemetry.addData("left", "%.2f", left);
