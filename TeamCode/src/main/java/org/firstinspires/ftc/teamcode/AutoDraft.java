@@ -180,6 +180,8 @@ public class AutoDraft extends LinearOpMode {
         gyroDrive(DRIVE_SPEED,52,80,5,0);
         gyroTurn(TURN_SPEED,65);
         gyroDrive(DRIVE_SPEED,drop2,2 + mid,10,0);
+        robot.RDrop.setPosition(.23);
+        robot.LDrop.setPosition(.23);
         gyroDrive(DRIVE_SPEED,StartBack,0,5,0);
         robot.arm.setPower(-.2);
         gyroHold(TURN_SPEED,0,1.7);
