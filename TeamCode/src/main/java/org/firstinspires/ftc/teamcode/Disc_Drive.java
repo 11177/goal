@@ -144,6 +144,14 @@ public class Disc_Drive extends OpMode {
 
 
         // Setup for arm control
+       /* if (gamepad2.dpad_left){
+            robot.pickup.setPosition(.7);
+        }
+        if (gamepad2.dpad_right){
+            robot.pickup.setPosition(.3);
+        }
+
+        */
         if (gamepad2.y) {
             robot.LDrop.setPosition(.23);
             robot.RDrop.setPosition(.23);
@@ -156,7 +164,7 @@ public class Disc_Drive extends OpMode {
             robot.Track.setPower(1);
         }
         if (gamepad2.right_stick_button){
-            robot.Track.setPower(-1);
+            robot.Track.setPower(-.5);
         }
         if (gamepad2.x){
             robot.Track.setPower(0);

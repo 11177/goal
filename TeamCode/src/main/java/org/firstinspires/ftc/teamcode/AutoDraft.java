@@ -70,6 +70,7 @@ public class AutoDraft extends LinearOpMode {
     private static int ReturnAngle = 0;
     private static int drop2 = 0;
     private static int mid = 0;
+    private static int backup2 = 0;
 
     HardwareCompBot robot = new HardwareCompBot();   // Use a Pushbot's hardware
     BNO055IMU imu;
@@ -119,28 +120,31 @@ public class AutoDraft extends LinearOpMode {
 
             if (totals >= 4) {
                 StartAngle = 30;
-                StartDistance = 120;
+                StartDistance = 110;
                 StartBack = -40;
                 ReturnAngle = 28;
-                ReturnDistance = -81;
-                drop2 = 120;
+                ReturnDistance = -78;
+                drop2 = 115;
                 mid = 0;
+                backup2 = -35;
             } else if (totals <= 0) {
                 StartAngle = 55;
-                StartDistance= 90;
+                StartDistance= 85;
                 StartBack = -5;
                ReturnAngle = 45;
-               ReturnDistance = -64;
+               ReturnDistance = -60;
                drop2 = 65;
                mid = -2;
+               backup2 = -31;
             } else {
                 StartAngle = 17;
-                StartDistance = 82;
+                StartDistance = 75;
                 StartBack = -20;
                 ReturnAngle = 22;
-                ReturnDistance = -66;
+                ReturnDistance = -50;
                 drop2 = 90;
                 mid = -8;
+                backup2 = -40;
             }
             totals = 0;
         }
@@ -168,13 +172,16 @@ public class AutoDraft extends LinearOpMode {
         robot.LWheel.setPower(-1);
         robot.RWheel.setPower(-1);
         gyroDrive(DRIVE_SPEED, ReturnDistance,ReturnAngle, 30,0);
-        gyroHold(TURN_SPEED,9,1);
+        gyroHold(TURN_SPEED,3,1);
         robot.RTrack.setPosition(1);
         robot.LTrack.setPosition(0);
-        gyroHold(TURN_SPEED,6,2);
-        gyroHold(TURN_SPEED,3,3);
+        gyroHold(TURN_SPEED,0,2);
+        robot.LWheel.setPower(0);
+        robot.RWheel.setPower(0);
+        robot.RTrack.setPosition(.5);
+        robot.LTrack.setPosition(.5);
         gyroTurn(TURN_SPEED,ReturnAngle);
-        gyroDrive(DRIVE_SPEED, (ReturnDistance/2)-4,ReturnAngle, 30,0);
+        gyroDrive(DRIVE_SPEED, backup2, ReturnAngle, 30,0);
 
         gyroTurn(TURN_SPEED,90);
         gyroDrive(DRIVE_SPEED,52,80,5,0);

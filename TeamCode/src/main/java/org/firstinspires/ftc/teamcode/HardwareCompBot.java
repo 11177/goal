@@ -49,6 +49,7 @@ public class HardwareCompBot {
     Servo RTrack = null;
     Servo LDrop = null;
     Servo RDrop = null;
+    Servo pickup = null;
     /*
     DcMotor SpinIn = null;
     DcMotor Ramp = null;
@@ -89,6 +90,8 @@ public class HardwareCompBot {
         RDrop.setPosition(.75);
         claw = ahwMap.get(Servo.class, "claw");
         claw.setPosition(1);
+        //pickup = ahwMap.get(Servo.class, "pickup");
+        //pickup.setPosition(1);
 
         DriveLeft1.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         DriveRight1.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
