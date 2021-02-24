@@ -120,18 +120,18 @@ public class AutoDraft extends LinearOpMode {
 
             if (totals >= 4) {
                 StartAngle = 30;
-                StartDistance = 110;
+                StartDistance = 105;
                 StartBack = -40;
                 ReturnAngle = 28;
-                ReturnDistance = -78;
-                drop2 = 115;
+                ReturnDistance = -83;
+                drop2 = 112;
                 mid = 0;
                 backup2 = -35;
             } else if (totals <= 0) {
                 StartAngle = 55;
                 StartDistance= 85;
                 StartBack = -5;
-               ReturnAngle = 45;
+               ReturnAngle = 38;
                ReturnDistance = -60;
                drop2 = 65;
                mid = -2;
@@ -142,8 +142,8 @@ public class AutoDraft extends LinearOpMode {
                 StartBack = -20;
                 ReturnAngle = 22;
                 ReturnDistance = -50;
-                drop2 = 90;
-                mid = -8;
+                drop2 = 95;
+                mid = 18;
                 backup2 = -40;
             }
             totals = 0;
