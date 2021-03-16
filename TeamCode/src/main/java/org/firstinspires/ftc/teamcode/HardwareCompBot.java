@@ -50,6 +50,7 @@ public class HardwareCompBot {
     Servo LDrop = null;
     Servo RDrop = null;
     Servo pickup = null;
+    Servo lock = null;
     /*
     DcMotor SpinIn = null;
     DcMotor Ramp = null;
@@ -85,11 +86,13 @@ public class HardwareCompBot {
         RTrack = ahwMap.get(Servo.class, "RTrack");
         RTrack.setPosition(.5);
         LDrop = ahwMap.get(Servo.class, "LDrop");
-        LDrop.setPosition(.75);
+        LDrop.setPosition(.23);
         RDrop= ahwMap.get(Servo.class, "RDrop");
-        RDrop.setPosition(.75);
+        RDrop.setPosition(.23);
         claw = ahwMap.get(Servo.class, "claw");
         claw.setPosition(1);
+        lock = ahwMap.get(Servo.class, "Lock");
+        lock.setPosition(0);
         //pickup = ahwMap.get(Servo.class, "pickup");
         //pickup.setPosition(1);
 

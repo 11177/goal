@@ -127,6 +127,12 @@ public class Disc_Drive extends OpMode {
         if (gamepad1.b){
             x =true;
         }
+        if (gamepad1.left_stick_button){
+            robot.lock.setPosition(0);
+        }
+        if (gamepad1.right_stick_button) {
+            robot.lock.setPosition(.9);
+        }
 
         //  this will cut the power to the wheel by 50 and 75 percent if needed for control
         if (gamepad1.left_trigger != 0 || gamepad1.right_trigger != 0) {
@@ -161,10 +167,10 @@ public class Disc_Drive extends OpMode {
             robot.RDrop.setPosition(.75);
         }
         if (gamepad2.left_stick_button){
-            robot.Track.setPower(1);
+            robot.Track.setPower(.5);
         }
         if (gamepad2.right_stick_button){
-            robot.Track.setPower(-.5);
+            robot.Track.setPower(-1);
         }
         if (gamepad2.x){
             robot.Track.setPower(0);

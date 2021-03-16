@@ -123,10 +123,10 @@ public class AutoDraft extends LinearOpMode {
                 StartDistance = 105;
                 StartBack = -40;
                 ReturnAngle = 28;
-                ReturnDistance = -83;
+                ReturnDistance = -85;
                 drop2 = 112;
                 mid = 0;
-                backup2 = -35;
+                backup2 = -33;
             } else if (totals <= 0) {
                 StartAngle = 55;
                 StartDistance= 85;
@@ -141,10 +141,10 @@ public class AutoDraft extends LinearOpMode {
                 StartDistance = 75;
                 StartBack = -20;
                 ReturnAngle = 22;
-                ReturnDistance = -50;
+                ReturnDistance = -49;
                 drop2 = 95;
-                mid = 18;
-                backup2 = -40;
+                mid = -18;
+                backup2 = -41;
             }
             totals = 0;
         }
@@ -169,13 +169,15 @@ public class AutoDraft extends LinearOpMode {
 
          */
         gyroTurn(TURN_SPEED,ReturnAngle);
-        robot.LWheel.setPower(-1);
-        robot.RWheel.setPower(-1);
+        robot.LWheel.setPower(-.9);
+        robot.RWheel.setPower(-.9);
         gyroDrive(DRIVE_SPEED, ReturnDistance,ReturnAngle, 30,0);
         gyroHold(TURN_SPEED,3,1);
+        robot.lock.setPosition(1);
         robot.RTrack.setPosition(1);
         robot.LTrack.setPosition(0);
         gyroHold(TURN_SPEED,0,2);
+        gyroHold(TURN_SPEED,-3,2);
         robot.LWheel.setPower(0);
         robot.RWheel.setPower(0);
         robot.RTrack.setPosition(.5);
@@ -191,6 +193,7 @@ public class AutoDraft extends LinearOpMode {
         robot.LDrop.setPosition(.23);
         gyroDrive(DRIVE_SPEED,StartBack,0,5,0);
         robot.arm.setPower(-.2);
+
         gyroHold(TURN_SPEED,0,1.7);
         robot.arm.setPower(0);
     }
